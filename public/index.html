@@ -6,6 +6,7 @@
     <title>YouTube Wrapped - Your Personal Stats</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -54,14 +55,47 @@
                     </select>
                 </div>
 
+                <div class="oauth-section">
+                    <h3>🔐 Sign in with Google (Quick Analysis)</h3>
+                    <p class="oauth-description">Analyze your liked videos and subscriptions without downloading files.</p>
+                    
+                    <div class="oauth-warning">
+                        <strong>⚠️ Limited Data:</strong> OAuth can only access liked videos (~10-20% of what you watch). 
+                        For complete watch history, use Google Takeout above.
+                    </div>
+                    
+                    <div id="google-signin-container">
+                        <div id="g_id_onload"
+                             data-client_id="YOUR_CLIENT_ID_HERE"
+                             data-callback="handleCredentialResponse"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin" 
+                             data-type="standard"
+                             data-size="large"
+                             data-theme="filled_black"
+                             data-text="signin_with"
+                             data-shape="rectangular"
+                             data-logo_alignment="left">
+                        </div>
+                    </div>
+                    
+                    <button id="signout-btn" class="secondary-btn" style="display: none;">Sign Out</button>
+                    <div id="oauth-status" class="oauth-status" style="display: none;">
+                        <span class="status-icon">✓</span>
+                        <span id="oauth-user">Signed in</span>
+                    </div>
+                </div>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
                 <div class="api-section">
                     <details>
-                        <summary>⚡ Enhanced Mode (Optional)</summary>
+                        <summary>⚡ Enhanced Mode - API Key (Optional)</summary>
                         <div class="api-content">
-                            <p><strong>Option 1: Use API key to analyze live data</strong></p>
-                            <p class="api-description">Analyze your subscriptions, liked videos, and playlists directly from YouTube.</p>
-                            
-                            <p><strong>Option 2: Combine with Takeout file</strong></p>
+                            <p><strong>For Takeout file enrichment:</strong></p>
                             <p class="api-description">Upload watch history + API key for enhanced features:</p>
                             <ul>
                                 <li>✅ <strong>Exact watch time</strong> (instead of estimates)</li>

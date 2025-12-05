@@ -1,6 +1,8 @@
 // YouTube Wrapped - Client-side Analysis
 let uploadedData = null;
 let apiKey = null;
+let oauthToken = null;
+let userEmail = null;
 
 // DOM Elements
 const fileInput = document.getElementById('file-input');
@@ -37,8 +39,8 @@ analyzeBtn.addEventListener('click', () => {
     apiKey = document.getElementById('api-key').value.trim() || null;
     
     // Check if we have at least one input method
-    if (!uploadedData && !apiKey) {
-        alert('Please either upload a watch-history.json file OR provide a YouTube API key.');
+    if (!uploadedData && !apiKey && !oauthToken) {
+        alert('Please either:\n1. Upload a watch-history.json file, OR\n2. Sign in with Google, OR\n3. Provide a YouTube API key');
         return;
     }
     
@@ -54,6 +56,53 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     fileLabel.textContent = 'Choose watch-history.json';
     analyzeBtn.disabled = true;
     uploadedData = null;
+});
+
+// OAuth: Handle Google Sign-In credential response
+window.handleCredentialResponse = function(response) {
+    console.log('OAuth sign-in successful');
+    
+    // Decode JWT to get user info (basic decoding for display only)
+    try {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const payload = JSON.parse(jsonPayload);
+        userEmail = payload.email;
+        oauthToken = response.credential;
+        
+        // Update UI
+        document.getElementById('oauth-user').textContent = `Signed in as ${userEmail}`;
+        document.getElementById('oauth-status').style.display = 'inline-block';
+        document.getElementById('signout-btn').style.display = 'inline-block';
+        document.getElementById('google-signin-container').style.display = 'none';
+        
+        console.log('User signed in:', userEmail);
+    } catch (error) {
+        console.error('Error parsing credential:', error);
+        alert('Sign-in succeeded but could not parse user info');
+    }
+};
+
+// Sign out button handler
+document.getElementById('signout-btn').addEventListener('click', () => {
+    oauthToken = null;
+    userEmail = null;
+    
+    // Update UI
+    document.getElementById('oauth-status').style.display = 'none';
+    document.getElementById('signout-btn').style.display = 'none';
+    document.getElementById('google-signin-container').style.display = 'flex';
+    
+    // Google Sign-Out
+    if (window.google && window.google.accounts) {
+        window.google.accounts.id.disableAutoSelect();
+    }
+    
+    console.log('User signed out');
 });
 
 // Share button handler
@@ -75,6 +124,34 @@ document.getElementById('share-btn').addEventListener('click', () => {
         });
     }
 });
+
+// Fetch watch history using OAuth token
+async function fetchYouTubeDataWithOAuth(token, year) {
+    console.log('Fetching data from YouTube with OAuth...');
+    
+    const watchHistory = [];
+    
+    try {
+        // Note: Google Sign-In provides an ID token, not an access token
+        // We need to exchange it or use a different flow
+        // For now, we'll show a helpful message
+        
+        alert(
+            'OAuth Sign-In Detected!\n\n' +
+            'Currently, the OAuth flow requires additional setup:\n' +
+            '1. Backend server to exchange tokens\n' +
+            '2. Access token (not just ID token)\n\n' +
+            'For now, please use one of these options:\n' +
+            '• Upload Takeout file (recommended)\n' +
+            '• Use API key with Takeout for enhanced mode'
+        );
+        
+        return null;
+    } catch (error) {
+        console.error('OAuth fetch error:', error);
+        return null;
+    }
+}
 
 // Fetch watch history from YouTube API (liked videos + subscriptions)
 async function fetchYouTubeData(apiKey, year) {
@@ -287,8 +364,21 @@ async function analyzeData(data, yearStr) {
         let enrichedData = null;
         let actualData = data;
         
-        // If no file provided, fetch from API
-        if (!actualData && apiKey) {
+        // If no file provided, try to fetch from OAuth or API
+        if (!actualData && oauthToken) {
+            const loadingText = loadingSection.querySelector('p');
+            loadingText.textContent = 'Fetching your YouTube data with OAuth...';
+            actualData = await fetchYouTubeDataWithOAuth(oauthToken, yearStr);
+            
+            if (!actualData) {
+                // Failed to fetch with OAuth
+                loadingSection.classList.add('hidden');
+                uploadSection.classList.remove('hidden');
+                return;
+            }
+            
+            loadingText.textContent = 'Analyzing your YouTube data...';
+        } else if (!actualData && apiKey) {
             const loadingText = loadingSection.querySelector('p');
             loadingText.textContent = 'Fetching your YouTube data...';
             actualData = await fetchYouTubeData(apiKey, yearStr);
