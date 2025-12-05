@@ -2,6 +2,16 @@
 
 Analyze your YouTube watch history and get detailed statistics about your viewing habits, just like Spotify Wrapped!
 
+## 🌐 Web App (Recommended)
+
+**[Launch Web App](https://your-app.netlify.app)** - No installation required!
+
+Upload your watch history and get instant results in your browser. All processing happens locally - your data never leaves your computer.
+
+## 💻 CLI Tool
+
+Prefer the command line? Install and run locally:
+
 ## Features
 
 - 📊 **Total watch time** - See exactly how many minutes you spent watching YouTube
@@ -120,6 +130,14 @@ All data processing happens locally on your machine. No data is sent anywhere ex
 **No data showing:**
 - Check that you're analyzing the correct year with `--year`
 - Verify your watch-history.json file isn't empty
+
+## 🚀 Deploy Your Own
+
+Want to deploy your own version?
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/erinmikailstaples/youtube-stats)
+
+See [DEPLOY.md](DEPLOY.md) for detailed deployment instructions.
 
 ## License
 

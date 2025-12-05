@@ -46,7 +46,7 @@ token.json
 
 # Data files
 *.json
-!pyproject.json
+!package.json
 watch-history.json
 takeout-*.json
 

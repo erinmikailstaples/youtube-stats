@@ -1,0 +1,20 @@
+{
+  "name": "youtube-stats",
+  "version": "1.0.0",
+  "description": "Analyze your YouTube watch history and generate personalized stats",
+  "scripts": {
+    "dev": "python -m http.server 8000 --directory public",
+    "deploy": "netlify deploy --prod --dir=public"
+  },
+  "keywords": [
+    "youtube",
+    "statistics",
+    "analytics",
+    "wrapped"
+  ],
+  "author": "Erin Mikail Staples",
+  "license": "MIT",
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
+}

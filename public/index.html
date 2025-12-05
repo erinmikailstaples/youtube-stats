@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Wrapped - Your Personal Stats</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 YouTube Wrapped</h1>
+            <p class="subtitle">Discover your YouTube viewing stats - Spotify Wrapped style!</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section id="upload-section" class="card">
+                <h2>Get Started</h2>
+                <p>Upload your <code>watch-history.json</code> file from Google Takeout to see your stats.</p>
+                
+                <div class="how-to">
+                    <details>
+                        <summary>📋 How to get your watch history</summary>
+                        <ol>
+                            <li>Go to <a href="https://takeout.google.com/" target="_blank">Google Takeout</a></li>
+                            <li>Click "Deselect all"</li>
+                            <li>Select only <strong>YouTube → history</strong></li>
+                            <li>Click "Next step" and "Create export"</li>
+                            <li>Wait for email (1-4 hours)</li>
+                            <li>Download, extract, and find <code>watch-history.json</code></li>
+                        </ol>
+                    </details>
+                </div>
+
+                <div class="upload-area">
+                    <input type="file" id="file-input" accept=".json" />
+                    <label for="file-input" class="file-label">
+                        <span class="upload-icon">📁</span>
+                        <span class="upload-text">Choose watch-history.json</span>
+                    </label>
+                </div>
+
+                <div class="year-selector">
+                    <label for="year-select">Analyze year:</label>
+                    <select id="year-select">
+                        <option value="2025">2025</option>
+                        <option value="2024" selected>2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+
+                <button id="analyze-btn" class="primary-btn" disabled>Analyze My Stats</button>
+
+                <div class="privacy-notice">
+                    <span>🔒</span> Your data is processed entirely in your browser. Nothing is uploaded to our servers.
+                </div>
+            </section>
+
+            <!-- Loading Section -->
+            <section id="loading-section" class="card hidden">
+                <div class="loader"></div>
+                <p>Analyzing your YouTube history...</p>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="hidden">
+                <div class="card results-header">
+                    <h2 id="results-title">🎬 YOUR YOUTUBE WRAPPED 2024 🎬</h2>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📺</div>
+                        <div class="stat-value" id="total-videos">0</div>
+                        <div class="stat-label">Total Videos Watched</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="unique-videos">0</div>
+                        <div class="stat-label">Unique Videos</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="watch-time">0</div>
+                        <div class="stat-label">Estimated Watch Time</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-value" id="avg-per-day">0</div>
+                        <div class="stat-label">Videos Per Day</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🏆 Your Top Channels</h3>
+                    <div id="top-channels" class="channel-list"></div>
+                </div>
+
+                <div class="card">
+                    <h3>📅 Monthly Breakdown</h3>
+                    <div id="monthly-chart" class="chart"></div>
+                </div>
+
+                <div class="share-section">
+                    <button id="share-btn" class="secondary-btn">📤 Share Your Stats</button>
+                    <button id="reset-btn" class="secondary-btn">🔄 Analyze Another Year</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ for YouTube enthusiasts | <a href="https://github.com/erinmikailstaples/youtube-stats" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
