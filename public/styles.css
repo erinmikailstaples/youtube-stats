@@ -218,6 +218,79 @@ details a:hover {
     color: #81c784;
 }
 
+/* API Section */
+.api-section {
+    margin: 20px 0;
+}
+
+.api-section details {
+    background: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.api-section details[open] {
+    border-color: #ffa726;
+}
+
+.api-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #ffa726;
+    user-select: none;
+}
+
+.api-content {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.api-content p {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.api-content ul {
+    margin: 10px 0 15px 20px;
+}
+
+.api-content li {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+#api-key {
+    width: 100%;
+    padding: 12px;
+    background: var(--background);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    transition: border-color 0.3s ease;
+}
+
+#api-key:focus {
+    outline: none;
+    border-color: #ffa726;
+}
+
+.api-help {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ffa726;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.api-help:hover {
+    text-decoration: underline;
+}
+
 .hidden {
     display: none !important;
 }

@@ -54,6 +54,22 @@
                     </select>
                 </div>
 
+                <div class="api-section">
+                    <details>
+                        <summary>⚡ Enhanced Mode (Optional)</summary>
+                        <div class="api-content">
+                            <p>Provide a YouTube API key for enhanced features:</p>
+                            <ul>
+                                <li>✅ <strong>Exact watch time</strong> (instead of estimates)</li>
+                                <li>✅ <strong>Video categories</strong> (Music, Gaming, Education, etc.)</li>
+                                <li>✅ <strong>Trending videos</strong> detection</li>
+                            </ul>
+                            <input type="text" id="api-key" placeholder="YouTube API Key (optional)" />
+                            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="api-help">Get API Key →</a>
+                        </div>
+                    </details>
+                </div>
+
                 <button id="analyze-btn" class="primary-btn" disabled>Analyze My Stats</button>
 
                 <div class="privacy-notice">
@@ -107,6 +123,11 @@
                 <div class="card">
                     <h3>📅 Monthly Breakdown</h3>
                     <div id="monthly-chart" class="chart"></div>
+                </div>
+
+                <div class="card" id="categories-card" style="display: none;">
+                    <h3>🎬 Video Categories</h3>
+                    <div id="categories-chart" class="chart"></div>
                 </div>
 
                 <div class="share-section">
