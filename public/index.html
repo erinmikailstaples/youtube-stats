@@ -18,7 +18,7 @@
             <!-- Upload Section -->
             <section id="upload-section" class="card">
                 <h2>Get Started</h2>
-                <p>Upload your <code>watch-history.json</code> file from Google Takeout to see your stats.</p>
+                <p>Choose how you want to analyze your YouTube data:</p>
                 
                 <div class="how-to">
                     <details>
@@ -58,11 +58,15 @@
                     <details>
                         <summary>⚡ Enhanced Mode (Optional)</summary>
                         <div class="api-content">
-                            <p>Provide a YouTube API key for enhanced features:</p>
+                            <p><strong>Option 1: Use API key to analyze live data</strong></p>
+                            <p class="api-description">Analyze your subscriptions, liked videos, and playlists directly from YouTube.</p>
+                            
+                            <p><strong>Option 2: Combine with Takeout file</strong></p>
+                            <p class="api-description">Upload watch history + API key for enhanced features:</p>
                             <ul>
                                 <li>✅ <strong>Exact watch time</strong> (instead of estimates)</li>
                                 <li>✅ <strong>Video categories</strong> (Music, Gaming, Education, etc.)</li>
-                                <li>✅ <strong>Trending videos</strong> detection</li>
+                                <li>✅ <strong>Category insights</strong> and trends</li>
                             </ul>
                             <input type="text" id="api-key" placeholder="YouTube API Key (optional)" />
                             <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="api-help">Get API Key →</a>
@@ -70,10 +74,15 @@
                     </details>
                 </div>
 
-                <button id="analyze-btn" class="primary-btn" disabled>Analyze My Stats</button>
+                <button id="analyze-btn" class="primary-btn">Analyze My Stats</button>
 
                 <div class="privacy-notice">
                     <span>🔒</span> Your data is processed entirely in your browser. Nothing is uploaded to our servers.
+                </div>
+                
+                <div class="info-box">
+                    <strong>💡 Note:</strong> For most accurate watch history, use <strong>Google Takeout</strong>. 
+                    API-only mode can only access liked videos (not complete watch history).
                 </div>
             </section>
 

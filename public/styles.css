@@ -218,6 +218,17 @@ details a:hover {
     color: #81c784;
 }
 
+.info-box {
+    text-align: center;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(33, 150, 243, 0.1);
+    border-radius: 8px;
+    color: #64b5f6;
+    font-size: 0.9rem;
+    border: 1px solid rgba(33, 150, 243, 0.2);
+}
+
 /* API Section */
 .api-section {
     margin: 20px 0;
@@ -250,6 +261,13 @@ details a:hover {
 
 .api-content p {
     margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.api-description {
+    font-size: 0.9rem;
+    margin-top: 5px;
+    margin-bottom: 15px;
     color: var(--text-secondary);
 }
 

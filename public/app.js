@@ -16,7 +16,6 @@ fileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
         fileLabel.textContent = `Selected: ${file.name}`;
-        analyzeBtn.disabled = false;
         
         // Read file
         const reader = new FileReader();
@@ -26,7 +25,7 @@ fileInput.addEventListener('change', (e) => {
                 console.log(`Loaded ${uploadedData.length} entries`);
             } catch (error) {
                 alert('Error reading file. Please make sure it\'s a valid JSON file.');
-                analyzeBtn.disabled = true;
+                uploadedData = null;
             }
         };
         reader.readAsText(file);
@@ -35,10 +34,15 @@ fileInput.addEventListener('change', (e) => {
 
 // Analyze button handler
 analyzeBtn.addEventListener('click', () => {
-    if (!uploadedData) return;
+    apiKey = document.getElementById('api-key').value.trim() || null;
+    
+    // Check if we have at least one input method
+    if (!uploadedData && !apiKey) {
+        alert('Please either upload a watch-history.json file OR provide a YouTube API key.');
+        return;
+    }
     
     const year = yearSelect.value;
-    apiKey = document.getElementById('api-key').value.trim() || null;
     analyzeData(uploadedData, year);
 });
 
@@ -71,6 +75,81 @@ document.getElementById('share-btn').addEventListener('click', () => {
         });
     }
 });
+
+// Fetch watch history from YouTube API (liked videos + subscriptions)
+async function fetchYouTubeData(apiKey, year) {
+    console.log('Fetching data from YouTube API...');
+    
+    const watchHistory = [];
+    
+    try {
+        // Fetch liked videos (best approximation of watch history)
+        let pageToken = null;
+        let fetchedCount = 0;
+        
+        do {
+            const url = `https://www.googleapis.com/youtube/v3/videos?` +
+                `part=snippet,contentDetails&` +
+                `myRating=like&` +
+                `maxResults=50&` +
+                `key=${apiKey}` +
+                (pageToken ? `&pageToken=${pageToken}` : '');
+            
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                const error = await response.json();
+                console.error('API Error:', error);
+                
+                if (error.error.code === 403 || error.error.code === 401) {
+                    alert(
+                        'This API key does not have permission to access your YouTube data.\n\n' +
+                        'To use API-only mode, you need OAuth authentication (not just an API key).\n\n' +
+                        'For now, please use the "Upload Takeout file" option instead.'
+                    );
+                } else {
+                    alert(`YouTube API Error: ${error.error.message}`);
+                }
+                return null;
+            }
+            
+            const data = await response.json();
+            
+            // Convert to watch history format
+            for (const item of data.items) {
+                watchHistory.push({
+                    title: item.snippet.title,
+                    titleUrl: `https://www.youtube.com/watch?v=${item.id}`,
+                    subtitles: [{ name: item.snippet.channelTitle }],
+                    time: item.snippet.publishedAt // Note: This is publish time, not watch time
+                });
+            }
+            
+            fetchedCount += data.items.length;
+            pageToken = data.pageToken;
+            
+            console.log(`Fetched ${fetchedCount} liked videos...`);
+            
+        } while (pageToken && fetchedCount < 1000); // Limit to 1000 for performance
+        
+        if (watchHistory.length === 0) {
+            alert(
+                'No data found with this API key.\n\n' +
+                'Note: A simple API key can only access public data.\n' +
+                'For watch history, please use "Upload Takeout file" instead.'
+            );
+            return null;
+        }
+        
+        console.log(`Total items fetched: ${watchHistory.length}`);
+        return watchHistory;
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        alert('Failed to connect to YouTube API. Please check your connection and API key.');
+        return null;
+    }
+}
 
 // Extract video ID from URL
 function extractVideoId(url) {
@@ -206,16 +285,32 @@ async function analyzeData(data, yearStr) {
     
     try {
         let enrichedData = null;
+        let actualData = data;
         
-        // If API key provided, enrich the data
-        if (apiKey) {
+        // If no file provided, fetch from API
+        if (!actualData && apiKey) {
             const loadingText = loadingSection.querySelector('p');
-            loadingText.textContent = 'Fetching data from YouTube API...';
-            enrichedData = await enrichWithAPI(data, apiKey);
+            loadingText.textContent = 'Fetching your YouTube data...';
+            actualData = await fetchYouTubeData(apiKey, yearStr);
+            
+            if (!actualData) {
+                // Failed to fetch from API
+                loadingSection.classList.add('hidden');
+                uploadSection.classList.remove('hidden');
+                return;
+            }
+            
+            loadingText.textContent = 'Analyzing your YouTube data...';
+        }
+        
+        // If API key provided and we have data, enrich it
+        if (apiKey && actualData) {
+            const loadingText = loadingSection.querySelector('p');
+            loadingText.textContent = 'Enriching with YouTube API...';
+            enrichedData = await enrichWithAPI(actualData, apiKey);
             
             if (enrichedData === null) {
                 // API failed, fall back to estimates
-                apiKey = null;
                 enrichedData = null;
             }
             
@@ -224,7 +319,7 @@ async function analyzeData(data, yearStr) {
         
         // Use setTimeout to allow UI to update
         setTimeout(() => {
-            const stats = processData(data, yearStr, enrichedData);
+            const stats = processData(actualData, yearStr, enrichedData);
             displayResults(stats, yearStr);
             
             // Hide loading, show results
