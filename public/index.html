@@ -97,12 +97,42 @@
                 <div class="card results-header">
                     <h2 id="results-title">🎬 YOUR YOUTUBE WRAPPED 2024 🎬</h2>
                 </div>
+                
+                <div class="card key-metrics">
+                    <h3>📊 Your Key Stats</h3>
+                    <div class="key-metrics-grid">
+                        <div class="key-metric">
+                            <span class="metric-label">Minutes Watched</span>
+                            <span class="metric-value" id="key-minutes">0</span>
+                        </div>
+                        <div class="key-metric">
+                            <span class="metric-label">Videos Watched</span>
+                            <span class="metric-value" id="key-videos">0</span>
+                        </div>
+                        <div class="key-metric">
+                            <span class="metric-label">Top Channel</span>
+                            <span class="metric-value" id="key-channel">-</span>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">📺</div>
                         <div class="stat-value" id="total-videos">0</div>
-                        <div class="stat-label">Total Videos Watched</div>
+                        <div class="stat-label">Videos Watched</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="watch-time">0</div>
+                        <div class="stat-label">Watch Time</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🕢</div>
+                        <div class="stat-value" id="total-minutes">0</div>
+                        <div class="stat-label">Minutes Watched</div>
                     </div>
 
                     <div class="stat-card">
@@ -110,22 +140,11 @@
                         <div class="stat-value" id="unique-videos">0</div>
                         <div class="stat-label">Unique Videos</div>
                     </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">⏱️</div>
-                        <div class="stat-value" id="watch-time">0</div>
-                        <div class="stat-label">Estimated Watch Time</div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon">📅</div>
-                        <div class="stat-value" id="avg-per-day">0</div>
-                        <div class="stat-label">Videos Per Day</div>
-                    </div>
                 </div>
 
                 <div class="card">
-                    <h3>🏆 Your Top Channels</h3>
+                    <h3>🏆 Videos Watched by Channel</h3>
+                    <p class="section-description">Your most-watched channels this period</p>
                     <div id="top-channels" class="channel-list"></div>
                 </div>
 

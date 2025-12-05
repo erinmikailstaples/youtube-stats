@@ -449,21 +449,39 @@ function displayResults(stats, yearStr) {
     
     // Watch time - use API data if available
     let watchTimeText;
+    let totalMinutes;
+    let isExact = false;
+    
     if (stats.totalWatchSeconds) {
         // Exact time from API
-        const totalMinutes = stats.totalWatchSeconds / 60;
+        totalMinutes = stats.totalWatchSeconds / 60;
         watchTimeText = formatWatchTime(totalMinutes) + ' ✓';
+        isExact = true;
     } else {
         // Estimated time
         const avgMinutes = 11.7; // Average YouTube video length
-        const totalMinutes = stats.totalVideos * avgMinutes;
+        totalMinutes = stats.totalVideos * avgMinutes;
         watchTimeText = '~' + formatWatchTime(totalMinutes);
     }
     document.getElementById('watch-time').textContent = watchTimeText;
     
-    // Average per day
-    const avgPerDay = (stats.totalVideos / stats.daysInRange).toFixed(1);
-    document.getElementById('avg-per-day').textContent = avgPerDay;
+    // Total minutes as number
+    const minutesText = isExact 
+        ? Math.round(totalMinutes).toLocaleString()
+        : '~' + Math.round(totalMinutes).toLocaleString();
+    document.getElementById('total-minutes').textContent = minutesText;
+    
+    // Unique videos
+    document.getElementById('unique-videos').textContent = stats.uniqueVideos.toLocaleString();
+    
+    // Key metrics summary (prominently displayed)
+    document.getElementById('key-minutes').textContent = minutesText;
+    document.getElementById('key-videos').textContent = stats.totalVideos.toLocaleString();
+    if (stats.topChannels && stats.topChannels.length > 0) {
+        document.getElementById('key-channel').textContent = stats.topChannels[0][0];
+    } else {
+        document.getElementById('key-channel').textContent = '-';
+    }
     
     // Top channels
     displayTopChannels(stats.topChannels);
